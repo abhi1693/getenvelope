@@ -1,0 +1,36 @@
+# Local research and planning documents must stay out of Git.
+/docs/
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+.secrets/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# JavaScript and build output
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+dist/
+build/
+coverage/
+reports/
+*.log
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store

@@ -1,0 +1,16 @@
+[project]
+name = "getenvelope-backend"
+version = "0.0.0"
+description = "GetEnvelope FastAPI backend"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.143.3,<1",
+    "uvicorn[standard]>=0.34,<1",
+]
+
+[build-system]
+requires = ["setuptools>=80,<85"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

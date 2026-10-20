@@ -1,0 +1,11 @@
+/docs/
+node_modules/
+.venv/
+.next/
+dist/
+build/
+coverage/
+reports/
+package-lock.json
+uv.lock
+next-env.d.ts

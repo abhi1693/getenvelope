@@ -1,0 +1,25 @@
+{
+  "name": "getenvelope-workspace",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "frontend"
+  ],
+  "engines": {
+    "node": "^22.22.2 || ^24.15.0 || >=26"
+  },
+  "scripts": {
+    "backend:dev": "uv run --locked uvicorn getenvelope_api.main:app --reload --host 127.0.0.1 --port 8000",
+    "backend:check": "uv run --locked ruff check . && uv run --locked ruff format --check . && uv run --locked mypy",
+    "frontend:dev": "npm run dev --workspace @getenvelope/frontend",
+    "frontend:build": "npm run build --workspace @getenvelope/frontend",
+    "frontend:start": "npm run start --workspace @getenvelope/frontend",
+    "frontend:check": "npm run lint --workspace @getenvelope/frontend && npm run typecheck --workspace @getenvelope/frontend",
+    "format": "uv run --locked ruff format . && prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "npm run backend:check && npm run frontend:check && npm run format:check"
+  },
+  "devDependencies": {
+    "prettier": "3.9.10"
+  }
+}
