@@ -1,6 +1,6 @@
 [project]
 name = "getenvelope"
-version = "0.0.0"
+version = "0.0.1"
 description = "GetEnvelope application workspace"
 requires-python = ">=3.12"
 dependencies = []
@@ -17,8 +17,8 @@ getenvelope-backend = { workspace = true }
 [dependency-groups]
 dev = [
     "getenvelope-backend",
-    "mypy>=1.15,<3",
-    "ruff>=0.12,<1",
+    "mypy>=2.4.0,<3",
+    "ruff>=0.17.2,<1",
 ]
 
 [tool.ruff]

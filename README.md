@@ -6,6 +6,11 @@ This repository currently contains the application scaffold: a FastAPI backend, 
 development tooling, and container packaging. Email, providers, authentication, tenancy, persistence,
 and agent workflows have not been implemented.
 
+## 0.0.1
+
+Refresh backend and frontend dependencies, including the Node.js 26 type definitions, while keeping
+the existing scaffold behavior and locked installation workflow.
+
 ## Layout
 
 ```text
@@ -55,7 +60,7 @@ npm run frontend:build
 Run `npm run format` to format Python and frontend files. Python dependencies are locked in `uv.lock`;
 JavaScript dependencies are locked in `package-lock.json`.
 
-As of 2026-10-21, the full npm audit reports the unpatched
+As of 2026-10-23, the full npm audit reports the unpatched
 [braces advisory](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm) through Next.js's ESLint tooling.
 The production dependency audit (`npm audit --omit=dev`) is clean. Keep the standard framework lint
 rules and revisit this development dependency when an upstream fix is available.
