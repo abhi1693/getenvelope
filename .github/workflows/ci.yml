@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Checks, build, and dependency audits
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+      NODE_OPTIONS: --max-old-space-size=3072
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 26.12.1
+          cache: npm
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        with:
+          version: 0.13.5
+          python-version: "3.12.15"
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - name: Install locked dependencies
+        run: |
+          uv sync --all-packages --locked
+          npm ci
+      - name: Checks and dependency-security regressions
+        run: npm run check
+      - name: Production frontend build
+        run: npm run frontend:build
+      - name: JavaScript dependency audit
+        run: npm audit --audit-level=low
+      - name: Python dependency audit
+        run: |
+          uv export --locked --all-packages --no-emit-workspace --format requirements-txt --output-file "$RUNNER_TEMP/requirements-audit.txt"
+          uvx --from pip-audit==2.10.1 pip-audit --require-hashes --disable-pip --strict -r "$RUNNER_TEMP/requirements-audit.txt"

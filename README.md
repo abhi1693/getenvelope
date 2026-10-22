@@ -60,6 +60,11 @@ npm run frontend:build
 Run `npm run format` to format Python and frontend files. Python dependencies are locked in `uv.lock`;
 JavaScript dependencies are locked in `package-lock.json`.
 
+The read-only CI workflow runs on pull requests and pushes to `master`. It installs both locked
+dependency sets, runs `npm run check` (including dependency-security regressions), builds the
+production frontend, and audits all npm and Python dependencies. The Python audit uses the hashed
+uv export. CI needs no production credentials or external services and does not publish or deploy.
+
 The workspace reuses DevFeed's MIT-licensed, depth-limited braces implementation for the unpatched
 [upstream advisory](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm). Its parser and AST walkers reject
 excessive nesting; `npm run check` includes the malicious-input and ordinary-glob regression tests.
@@ -74,6 +79,12 @@ docker compose up --build
 
 Both services bind to localhost. This runs only the scaffold; it does not provision mail providers,
 databases, authentication, or production infrastructure.
+
+The frontend image pins Node.js 26.12.1 on Alpine 3.24 by its multi-platform digest, matching CI.
+Its build checks that Node and the standalone Next.js runtime load as the unprivileged application user.
+The backend retains the tested Python 3.12 line at patch 3.12.15 on Debian Bookworm, with digest-pinned
+Python and uv 0.13.5 stages. Its build checks native imports, API initialization, and certificate trust
+as the unprivileged application user.
 
 ## Local research
 
