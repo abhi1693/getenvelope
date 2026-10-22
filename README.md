@@ -6,6 +6,11 @@ This repository currently contains the application scaffold: a FastAPI backend, 
 development tooling, and container packaging. Email, providers, authentication, tenancy, persistence,
 and agent workflows have not been implemented.
 
+## 0.0.1
+
+Refresh backend and frontend dependencies, including the Node.js 26 type definitions, while keeping
+the existing scaffold behavior and locked installation workflow.
+
 ## Layout
 
 ```text
@@ -55,10 +60,16 @@ npm run frontend:build
 Run `npm run format` to format Python and frontend files. Python dependencies are locked in `uv.lock`;
 JavaScript dependencies are locked in `package-lock.json`.
 
-As of 2026-10-21, the full npm audit reports the unpatched
-[braces advisory](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm) through Next.js's ESLint tooling.
-The production dependency audit (`npm audit --omit=dev`) is clean. Keep the standard framework lint
-rules and revisit this development dependency when an upstream fix is available.
+The read-only CI workflow runs on pull requests and pushes to `master`. It installs both locked
+dependency sets, runs `npm run check` (including dependency-security regressions), builds the
+production frontend, and audits all npm and Python dependencies. The Python audit uses the hashed
+uv export. CI needs no production credentials or external services and does not publish or deploy.
+
+The workspace reuses DevFeed's MIT-licensed, depth-limited braces implementation for the unpatched
+[upstream advisory](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm). Its parser and AST walkers reject
+excessive nesting; `npm run check` includes the malicious-input and ordinary-glob regression tests.
+The frontend image copies this local package before the locked install. No advisory is suppressed;
+replace the fork when an audited upstream fix is available. See [the package security notes](packages/braces/SECURITY.md).
 
 ## Containers
 
@@ -68,6 +79,12 @@ docker compose up --build
 
 Both services bind to localhost. This runs only the scaffold; it does not provision mail providers,
 databases, authentication, or production infrastructure.
+
+The frontend image pins Node.js 26.12.1 on Alpine 3.24 by its multi-platform digest, matching CI.
+Its build checks that Node and the standalone Next.js runtime load as the unprivileged application user.
+The backend retains the tested Python 3.12 line at patch 3.12.15 on Debian Bookworm, with digest-pinned
+Python and uv 0.13.5 stages. Its build checks native imports, API initialization, and certificate trust
+as the unprivileged application user.
 
 ## Local research
 
