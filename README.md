@@ -60,10 +60,11 @@ npm run frontend:build
 Run `npm run format` to format Python and frontend files. Python dependencies are locked in `uv.lock`;
 JavaScript dependencies are locked in `package-lock.json`.
 
-As of 2026-10-23, the full npm audit reports the unpatched
-[braces advisory](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm) through Next.js's ESLint tooling.
-The production dependency audit (`npm audit --omit=dev`) is clean. Keep the standard framework lint
-rules and revisit this development dependency when an upstream fix is available.
+The workspace reuses DevFeed's MIT-licensed, depth-limited braces implementation for the unpatched
+[upstream advisory](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm). Its parser and AST walkers reject
+excessive nesting; `npm run check` includes the malicious-input and ordinary-glob regression tests.
+The frontend image copies this local package before the locked install. No advisory is suppressed;
+replace the fork when an audited upstream fix is available. See [the package security notes](packages/braces/SECURITY.md).
 
 ## Containers
 
